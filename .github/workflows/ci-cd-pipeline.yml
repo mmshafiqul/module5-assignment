@@ -30,3 +30,6 @@ jobs:
               with:
                 name: test-results
                 path: test-results.txt
+                
+            - name: Display Test Results
+              run: cat test-results.txt
