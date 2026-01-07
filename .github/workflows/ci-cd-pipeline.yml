@@ -22,14 +22,17 @@ jobs:
             - name: Install dependencies
               run: npm install
             
-            - name: Run tests
-              run: npm run check >> test-results.txt || true
-            
-            - name: Upload test results
+            - name: Run Tests and Save Results
+              run: |
+                npm run check 2>&1 | tee test-results.txt
+
+            - name: Display Test Results
+              run: cat test-results.txt
+
+            - name: Upload Test Results Artifact
               uses: actions/upload-artifact@v4
               with:
                 name: test-results
                 path: test-results.txt
                 
-            - name: Display Test Results
-              run: cat test-results.txt
+            
