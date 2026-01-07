@@ -35,4 +35,33 @@ jobs:
                 name: test-results
                 path: test-results.txt
                 
+    deploy:
+        name: Deploy application
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Download Test Results Artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: test-results
+
+            - name: Display Test Results
+              run: cat test-results.txt
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '22'
+                
+            - name: Install dependencies
+              run: npm install
             
+            - name: Deploy Application to server
+              run: |
+                echo "Deploying application..."
+                pm2 delete "node app" || true
+                pm2 start "npm start" --name "node app"
+                pm2 save
